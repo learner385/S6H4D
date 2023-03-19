@@ -1,0 +1,17 @@
+<launch>
+    <rosparam file="$(find S6H4D_urdf_file)/config/S6H4D_control.yaml" command="load" />
+    <param name="robot_description" command="$(find xacro)/xacro $(find S6H4D_urdf_file)/urdf/S6H4D.xacro" />
+    <include file="$(find gazebo_ros)/launch/empty_world.launch" />
+    <node pkg="gazebo_ros" 
+    type="spawn_model"
+    name="spawn_model" 
+    output="screen"
+    args="-urdf -model S6H4D_urdf_file -param robot_description -z 0.05" />
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" output="screen" ns="/sixaxis" respawn="false"
+    args="joint1_position_controller 
+    joint2_position_controller joint3_position_controller 
+    joint4_position_controller joint5_position_controller 
+    joint6_position_controller joint_state_controller" />
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+</launch>
